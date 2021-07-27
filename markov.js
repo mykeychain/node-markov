@@ -1,5 +1,6 @@
 /** Textual markov chain generator */
 
+const fsP = require('fs/promises');
 
 class MarkovMachine {
 
@@ -7,7 +8,7 @@ class MarkovMachine {
 
   constructor(text) {
     let words = text.split(/[ \r\n]+/);
-    // MORE CODE HERE
+    this.chain = this.makeChains(words);
   }
 
   /** set markov chains:
@@ -15,14 +16,62 @@ class MarkovMachine {
    *  for text of "the cat in the hat", chains will be
    *  {"the": ["cat", "hat"], "cat": ["in"], "in": ["the"], "hat": [null]} */
 
-  makeChains() {
-    // MORE CODE HERE
+  makeChains(words) {
+    let chain = {};
+
+    for (let i = 0; i < words.length; i++) {
+      chain[words[i]] = (chain[words[i]] || []);
+      chain[words[i]].push(words[i+1]);
+    }
+
+    return chain;
   }
 
 
   /** return random text from chains */
 
   getText(numWords = 100) {
-    // MORE CODE HERE
+    let words = [];
+
+    while (words.length < 1) {
+      let startingWords = Object.keys(this.chain);
+      let startingIdx = Math.floor(Math.random() * startingWords.length);
+
+      if (startingWords[startingIdx]) {
+        words.push(startingWords[startingIdx]);
+      }
+    }
+    
+
+    while (words.length < numWords) {
+      let key = words[words.length-1];
+      let randomIdx = Math.floor(Math.random() * this.chain[key].length)
+      let newWord = this.chain[key][randomIdx];
+
+      if (newWord) {
+        words.push(newWord);
+      } else {
+        break;
+      } 
+    }
+
+
+    return words.join(" ");
   }
 }
+
+// async function readMyFile(path) {
+//   try {
+//     let contents = await fsP.readFile(`./${path}`, "utf8");
+//     console.log(contents);
+//     return contents;
+//   } catch (err) {
+//     console.log(err);
+//     process.exit(1);
+//   }
+// }
+
+
+let markov = new MarkovMachine();
+console.log(markov.getText());
+
