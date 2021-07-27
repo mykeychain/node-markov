@@ -55,23 +55,30 @@ class MarkovMachine {
       } 
     }
 
-
     return words.join(" ");
   }
 }
 
-// async function readMyFile(path) {
-//   try {
-//     let contents = await fsP.readFile(`./${path}`, "utf8");
-//     console.log(contents);
-//     return contents;
-//   } catch (err) {
-//     console.log(err);
-//     process.exit(1);
-//   }
-// }
+async function readMyFile(path) {
+  try {
+    let contents = await fsP.readFile(`./${path}`, "utf8");
+    return contents;
 
+  } catch (err) {
+    console.log(err);
+    process.exit(1);
+  }
+}
 
-let markov = new MarkovMachine();
-console.log(markov.getText());
+async function start() {
+  let contents = await readMyFile(process.argv[2]);
+  let markov = new MarkovMachine(contents);
+  console.log(markov.getText());
+}
+
+start();
+
+module.exports = {
+  MarkovMachine
+}
 
