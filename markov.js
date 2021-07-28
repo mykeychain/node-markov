@@ -76,7 +76,7 @@ async function start() {
   console.log(markov.getText());
 }
 
-start();
+// start();
 
 module.exports = {
   MarkovMachine

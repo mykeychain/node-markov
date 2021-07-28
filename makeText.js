@@ -17,11 +17,11 @@ async function readFile(path) {
 
 async function readWeb(path) {
   try {
-    let resp = await axios.get(`${path}`);
+    let resp = await axios.get(path);
     return resp.data;
 
   } catch (err) {
-    console.log(err.message);
+    console.log("hello",err.message);
     process.exit(1);
   }
 }
